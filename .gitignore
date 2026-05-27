@@ -1,0 +1,11 @@
+# ====================================================================
+# ASP.NET Core - Build-Generated Artifacts Only
+# ====================================================================
+
+# Standard build outputs containing compiled binaries, IL (.dll), and executables (.exe)
+[Bb]in/
+
+# Intermediate compilation object folders, transient fragments, and nuget restore targets
+[Oo]bj/
+
+.vs/
