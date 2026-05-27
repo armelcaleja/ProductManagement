@@ -13,10 +13,9 @@ namespace ProductManagement.Data
         public DbSet<PackageType> PackageTypes { get; set; }
         public DbSet<User> Users { get; set; }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)  
         {
-            string connectionString = "Server=DESKTOP-QEG9QV3;Database=ProductManagementDb;Trusted_Connection=True;TrustServerCertificate=True;";
-            optionsBuilder.UseSqlServer(connectionString);
+        
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
