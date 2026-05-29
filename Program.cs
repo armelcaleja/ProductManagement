@@ -2,7 +2,7 @@ using ProductManagement.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// For DependencyInjection file
+// For Dependency Injection file
 builder.Services.AddApplicationServices(builder.Configuration);
 
 // Add services to the container.
