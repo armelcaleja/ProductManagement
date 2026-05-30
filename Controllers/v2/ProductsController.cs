@@ -67,7 +67,6 @@ namespace ProductManagement.Controllers.V2
             ProductId = p.ProductId,
             ProductName = p.ProductName,
             ProductPrice = p.ProductPrice,
-            CreatedBy = p.CreatedBy,
             Packages = p.Packages.Select(pkg => PackagesController.MapToDto(pkg)).ToList()
         };
     }

@@ -67,7 +67,6 @@ public class PackagesController : ControllerBase
         ParentPackageId = p.ParentPackageId,
         PackageTypeId = p.PackageTypeId,
         PackageTypeName = p.PackageType?.PackageTypeName ?? string.Empty,
-        CreatedBy = p.CreatedBy,
         Items = p.Items.Select(i => ItemsController.MapToDto(i)).ToList(),
         PackageList = p.PackageList.Select(sub => MapToDto(sub)).ToList()
     };

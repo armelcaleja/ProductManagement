@@ -72,8 +72,7 @@ namespace ProductManagement.Controllers.V1
         {
             ProductId = p.ProductId,
             ProductName = p.ProductName,
-            ProductPrice = p.ProductPrice,
-            CreatedBy = p.CreatedBy
+            ProductPrice = p.ProductPrice
         };
     }
 }

@@ -62,7 +62,6 @@ public class ItemsController : ControllerBase
     public static ItemResponseDto MapToDto(Item i) => new()
     {
         ItemId = i.ItemId,
-        ItemName = i.ItemName,
-        CreatedBy = i.CreatedBy
+        ItemName = i.ItemName
     };
 }
