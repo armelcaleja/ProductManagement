@@ -18,7 +18,7 @@ namespace ProductManagement.Services
 
         public async Task<IEnumerable<Item>> GetAllAsync() => await _context.Items.ToListAsync();
 
-        public async Task<Item?> GetByIdAsync(int id) => await _context.Items.FindAsync(id);
+        public async Task<Item?> GetByIdAsync(int id) => await _context.Items.FirstOrDefaultAsync(i => i.ItemId == id);
 
         public async Task<Item> AddAsync(Item item)
         {
@@ -41,9 +41,22 @@ namespace ProductManagement.Services
             return result;
         }
 
+        public async Task<bool> UnassignFromPackageAsync(int packageId, int itemId)
+        {
+            var existing = await _context.PackageItems
+                .FirstOrDefaultAsync(pi => pi.PackageId == packageId && pi.ItemId == itemId);
+            if (existing == null) return false;
+
+            existing.IsDeleted = true;
+            await _context.SaveChangesAsync();
+            await _auditLog.LogAsync("Unassign", "PackageItem", existing.PackageItemId,
+                $"Unassigned ItemId {itemId} from PackageId {packageId}", existing.CreatedBy);
+            return true;
+        }
+
         public async Task<bool> EditAsync(int id, Item item)
         {
-            var existing = await _context.Items.FindAsync(id);
+            var existing = await GetByIdAsync(id);
             if (existing == null) return false;
 
             existing.ItemName = item.ItemName;
@@ -57,13 +70,13 @@ namespace ProductManagement.Services
 
         public async Task<bool> DeleteAsync(int id)
         {
-            var existing = await _context.Items.FindAsync(id);
+            var existing = await GetByIdAsync(id);
             if (existing == null) return false;
 
-            _context.Items.Remove(existing);
+            existing.IsDeleted = true;
             await _context.SaveChangesAsync();
             await _auditLog.LogAsync("Delete", "Item", id,
-                $"Deleted item '{existing.ItemName}'", existing.CreatedBy);
+                $"Soft-deleted item '{existing.ItemName}'", existing.CreatedBy);
             return true;
         }
     }

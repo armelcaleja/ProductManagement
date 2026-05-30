@@ -18,7 +18,7 @@ namespace ProductManagement.Services
 
         public async Task<IEnumerable<PackageType>> GetAllAsync() => await _context.PackageTypes.ToListAsync();
 
-        public async Task<PackageType?> GetByIdAsync(int id) => await _context.PackageTypes.FindAsync(id);
+        public async Task<PackageType?> GetByIdAsync(int id) => await _context.PackageTypes.FirstOrDefaultAsync(pt => pt.PackageTypeId == id);
 
         public async Task<PackageType> AddAsync(PackageType packageType)
         {
@@ -31,7 +31,7 @@ namespace ProductManagement.Services
 
         public async Task<bool> EditAsync(int id, PackageType packageType)
         {
-            var existing = await _context.PackageTypes.FindAsync(id);
+            var existing = await GetByIdAsync(id);
             if (existing == null) return false;
 
             existing.PackageTypeName = packageType.PackageTypeName;
@@ -45,13 +45,13 @@ namespace ProductManagement.Services
 
         public async Task<bool> DeleteAsync(int id)
         {
-            var existing = await _context.PackageTypes.FindAsync(id);
+            var existing = await GetByIdAsync(id);
             if (existing == null) return false;
 
-            _context.PackageTypes.Remove(existing);
+            existing.IsDeleted = true;
             await _context.SaveChangesAsync();
             await _auditLog.LogAsync("Delete", "PackageType", id,
-                $"Deleted package type '{existing.PackageTypeName}'", existing.CreatedBy);
+                $"Soft-deleted package type '{existing.PackageTypeName}'", existing.CreatedBy);
             return true;
         }
     }

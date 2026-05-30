@@ -15,6 +15,8 @@ namespace ProductManagement.Model
 
         public DateTime CreatedDate { get; set; } = DateTime.UtcNow;
 
+        public bool IsDeleted { get; set; } = false;
+
         public List<Package> Packages { get; set; } = new();
     }
 }

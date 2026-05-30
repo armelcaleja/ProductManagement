@@ -32,6 +32,9 @@ namespace ProductManagement.Services
                 .Include(p => p.Packages).ThenInclude(pkg => pkg.PackageList).ThenInclude(sub => sub.Items)
                 .FirstOrDefaultAsync(p => p.ProductId == id);
 
+        private async Task<Product?> FindActiveAsync(int id) =>
+            await _context.Products.FirstOrDefaultAsync(p => p.ProductId == id);
+
         public async Task<Product> AddAsync(Product product)
         {
             _context.Products.Add(product);
@@ -43,7 +46,7 @@ namespace ProductManagement.Services
 
         public async Task<bool> EditAsync(int id, Product product)
         {
-            var existing = await _context.Products.FindAsync(id);
+            var existing = await FindActiveAsync(id);
             if (existing == null) return false;
 
             existing.ProductName = product.ProductName;
@@ -58,13 +61,13 @@ namespace ProductManagement.Services
 
         public async Task<bool> DeleteAsync(int id)
         {
-            var existing = await _context.Products.FindAsync(id);
+            var existing = await FindActiveAsync(id);
             if (existing == null) return false;
 
-            _context.Products.Remove(existing);
+            existing.IsDeleted = true;
             await _context.SaveChangesAsync();
             await _auditLog.LogAsync("Delete", "Product", id,
-                $"Deleted product '{existing.ProductName}'", existing.CreatedBy);
+                $"Soft-deleted product '{existing.ProductName}'", existing.CreatedBy);
             return true;
         }
     }

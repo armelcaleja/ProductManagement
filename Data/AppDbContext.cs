@@ -29,6 +29,13 @@ namespace ProductManagement.Data
                 .WithOne()
                 .HasForeignKey(p => p.ParentPackageId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            // Global query filters for soft delete
+            modelBuilder.Entity<Product>().HasQueryFilter(p => !p.IsDeleted);
+            modelBuilder.Entity<Item>().HasQueryFilter(i => !i.IsDeleted);
+            modelBuilder.Entity<Package>().HasQueryFilter(p => !p.IsDeleted);
+            modelBuilder.Entity<PackageType>().HasQueryFilter(pt => !pt.IsDeleted);
+            modelBuilder.Entity<PackageItem>().HasQueryFilter(pi => !pi.IsDeleted);
         }
     }
 }

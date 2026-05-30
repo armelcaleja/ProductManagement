@@ -12,5 +12,7 @@ namespace ProductManagement.Model
         public int CreatedBy { get; set; }
 
         public DateTime CreatedDate { get; set; } = DateTime.UtcNow;
+
+        public bool IsDeleted { get; set; } = false;
     }
 }

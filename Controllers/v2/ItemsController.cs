@@ -54,6 +54,10 @@ public class ItemsController : ControllerBase
         return await _service.AssignToPackageAsync(domainMapping) ? Ok("Assigned successfully.") : BadRequest();
     }
 
+    [HttpDelete("unassign-from-package")]
+    public async Task<IActionResult> UnassignFromPackage([FromBody] PackageItemAssignDto dto) =>
+        await _service.UnassignFromPackageAsync(dto.PackageId, dto.ItemId) ? NoContent() : NotFound();
+
     [HttpPut("{id:int}")]
     public async Task<IActionResult> Edit(int id, [FromBody] ItemCreateDto dto)
     {
