@@ -68,8 +68,12 @@ public class ItemsController : ControllerBase
     }
 
     [HttpDelete("{id:int}")]
-    public async Task<IActionResult> Delete(int id) =>
-        await _service.DeleteAsync(id) ? NoContent() : NotFound();
+    public async Task<IActionResult> Delete(int id)
+    {
+        var result = await _service.DeleteAsync(id);
+        if (!result) return NotFound(new { message = $"Item with ID {id} not found." });
+        return Ok(new { message = "Item successfully deleted." });
+    }
 
     public static ItemResponseDto MapToDto(Item i) => new()
     {

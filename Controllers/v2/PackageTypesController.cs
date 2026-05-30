@@ -52,8 +52,12 @@ public class PackageTypesController : ControllerBase
     }
 
     [HttpDelete("{id:int}")]
-    public async Task<IActionResult> Delete(int id) =>
-        await _service.DeleteAsync(id) ? NoContent() : NotFound();
+    public async Task<IActionResult> Delete(int id)
+    {
+        var result = await _service.DeleteAsync(id);
+        if (!result) return NotFound(new { message = $"PackageType with ID {id} not found." });
+        return Ok(new { message = "PackageType successfully deleted." });
+    }
 
     private static PackageTypeResponseDto MapToDto(PackageType t) => new()
     {

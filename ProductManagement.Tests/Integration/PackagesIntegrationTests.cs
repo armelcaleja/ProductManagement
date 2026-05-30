@@ -124,7 +124,7 @@ public class PackagesIntegrationTests : IClassFixture<CustomWebApplicationFactor
         var deleteResponse = await client.DeleteAsync($"/api/v2/Products/{product.ProductId}");
 
         // Assert - InMemory allows this (no FK enforcement), real DB would block it
-        deleteResponse.StatusCode.Should().Be(HttpStatusCode.NoContent);
+        deleteResponse.StatusCode.Should().Be(HttpStatusCode.OK);
     }
 
     [Fact]

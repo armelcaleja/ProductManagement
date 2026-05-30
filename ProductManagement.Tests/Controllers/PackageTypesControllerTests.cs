@@ -162,7 +162,7 @@ public class PackageTypesControllerTests
     }
 
     [Fact]
-    public async Task Delete_ExistingPackageType_ReturnsNoContent()
+    public async Task Delete_ExistingPackageType_ReturnsOkWithMessage()
     {
         // Arrange
         _serviceMock.Setup(s => s.DeleteAsync(1)).ReturnsAsync(true);
@@ -171,11 +171,12 @@ public class PackageTypesControllerTests
         var result = await _controller.Delete(1);
 
         // Assert
-        result.Should().BeOfType<NoContentResult>();
+        var okResult = result.Should().BeOfType<OkObjectResult>().Subject;
+        okResult.Value.Should().BeEquivalentTo(new { message = "PackageType successfully deleted." });
     }
 
     [Fact]
-    public async Task Delete_NonExistingPackageType_ReturnsNotFound()
+    public async Task Delete_NonExistingPackageType_ReturnsNotFoundWithMessage()
     {
         // Arrange
         _serviceMock.Setup(s => s.DeleteAsync(99)).ReturnsAsync(false);
@@ -184,6 +185,7 @@ public class PackageTypesControllerTests
         var result = await _controller.Delete(99);
 
         // Assert
-        result.Should().BeOfType<NotFoundResult>();
+        var notFoundResult = result.Should().BeOfType<NotFoundObjectResult>().Subject;
+        notFoundResult.Value.Should().BeEquivalentTo(new { message = "PackageType with ID 99 not found." });
     }
 }

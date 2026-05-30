@@ -65,8 +65,12 @@ namespace ProductManagement.Controllers.V2
         }
 
         [HttpDelete("{id:int}")]
-        public async Task<IActionResult> Delete(int id) =>
-            await _service.DeleteAsync(id) ? NoContent() : NotFound();
+        public async Task<IActionResult> Delete(int id)
+        {
+            var result = await _service.DeleteAsync(id);
+            if (!result) return NotFound(new { message = $"Product with ID {id} not found." });
+            return Ok(new { message = "Product successfully deleted." });
+        }
 
         private static ProductV2ResponseDto MapToV2Dto(Product p) => new()
         {

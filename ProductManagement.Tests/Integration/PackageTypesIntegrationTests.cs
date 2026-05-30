@@ -88,9 +88,7 @@ public class PackageTypesIntegrationTests : IClassFixture<CustomWebApplicationFa
 
         // Delete
         var deleteResponse = await client.DeleteAsync($"/api/v2/PackageTypes/{created.PackageTypeId}");
-        deleteResponse.StatusCode.Should().Be(HttpStatusCode.NoContent);
-
-        // Verify deleted
+        deleteResponse.StatusCode.Should().Be(HttpStatusCode.OK);
         var getDeletedResponse = await client.GetAsync($"/api/v2/PackageTypes/{created.PackageTypeId}");
         getDeletedResponse.StatusCode.Should().Be(HttpStatusCode.NotFound);
     }

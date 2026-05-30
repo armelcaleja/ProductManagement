@@ -89,9 +89,7 @@ public class ProductsIntegrationTests : IClassFixture<CustomWebApplicationFactor
 
         // Delete
         var deleteResponse = await client.DeleteAsync($"/api/v1/Products/{created.ProductId}");
-        deleteResponse.StatusCode.Should().Be(HttpStatusCode.NoContent);
-
-        // Verify deleted
+        deleteResponse.StatusCode.Should().Be(HttpStatusCode.OK);
         var getDeletedResponse = await client.GetAsync($"/api/v1/Products/{created.ProductId}");
         getDeletedResponse.StatusCode.Should().Be(HttpStatusCode.NotFound);
     }

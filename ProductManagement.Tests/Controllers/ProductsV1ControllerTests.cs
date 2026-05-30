@@ -127,7 +127,7 @@ public class ProductsV1ControllerTests
     }
 
     [Fact]
-    public async Task Delete_ExistingProduct_ReturnsNoContent()
+    public async Task Delete_ExistingProduct_ReturnsOkWithMessage()
     {
         // Arrange
         _serviceMock.Setup(s => s.DeleteAsync(1)).ReturnsAsync(true);
@@ -136,11 +136,12 @@ public class ProductsV1ControllerTests
         var result = await _controller.Delete(1);
 
         // Assert
-        result.Should().BeOfType<NoContentResult>();
+        var okResult = result.Should().BeOfType<OkObjectResult>().Subject;
+        okResult.Value.Should().BeEquivalentTo(new { message = "Product successfully deleted." });
     }
 
     [Fact]
-    public async Task Delete_NonExistingProduct_ReturnsNotFound()
+    public async Task Delete_NonExistingProduct_ReturnsNotFoundWithMessage()
     {
         // Arrange
         _serviceMock.Setup(s => s.DeleteAsync(99)).ReturnsAsync(false);
@@ -149,6 +150,7 @@ public class ProductsV1ControllerTests
         var result = await _controller.Delete(99);
 
         // Assert
-        result.Should().BeOfType<NotFoundResult>();
+        var notFoundResult = result.Should().BeOfType<NotFoundObjectResult>().Subject;
+        notFoundResult.Value.Should().BeEquivalentTo(new { message = "Product with ID 99 not found." });
     }
 }
