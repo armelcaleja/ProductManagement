@@ -1,11 +1,10 @@
 ﻿using Asp.Versioning;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using ProductManagement.Data;
 using ProductManagement.DTOs;
 using ProductManagement.Interfaces;
 using ProductManagement.Model;
-using System.Collections;
+using System.Security.Claims;
 
 namespace ProductManagement.Controllers.V1
 {
@@ -21,6 +20,9 @@ namespace ProductManagement.Controllers.V1
         {
             _productService = productService;
         }
+
+        private int GetUserId() =>
+            int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
 
         [HttpGet]
         public async Task<IActionResult> GetAll()
@@ -45,7 +47,7 @@ namespace ProductManagement.Controllers.V1
             {
                 ProductName = dto.ProductName,
                 ProductPrice = dto.ProductPrice,
-                CreatedBy = dto.CreatedBy
+                CreatedBy = GetUserId()
             };
             var result = await _productService.AddAsync(domainModel);
             return CreatedAtAction(nameof(GetById), new { id = result.ProductId, version = "1.0" }, MapToDto(result));
@@ -59,7 +61,7 @@ namespace ProductManagement.Controllers.V1
                 ProductId = id,
                 ProductName = dto.ProductName,
                 ProductPrice = dto.ProductPrice,
-                CreatedBy = dto.CreatedBy
+                CreatedBy = GetUserId()
             };
             return await _productService.EditAsync(id, domainModel) ? NoContent() : NotFound();
         }

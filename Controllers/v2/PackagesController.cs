@@ -1,18 +1,24 @@
 ﻿using Asp.Versioning;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ProductManagement.DTOs;
 using ProductManagement.Interfaces;
 using ProductManagement.Model;
+using System.Security.Claims;
 
 namespace ProductManagement.Controllers.V2;
 
 [ApiController]
 [ApiVersion("2.0")]
 [Route("api/v{version:apiVersion}/[controller]")]
+[Authorize]
 public class PackagesController : ControllerBase
 {
     private readonly IPackageService _service;
     public PackagesController(IPackageService service) => _service = service;
+
+    private int GetUserId() =>
+        int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
 
     [HttpGet]
     public async Task<IActionResult> GetAll()
@@ -36,7 +42,7 @@ public class PackagesController : ControllerBase
             ProductId = dto.ProductId,
             ParentPackageId = dto.ParentPackageId,
             PackageTypeId = dto.PackageTypeId,
-            CreatedBy = dto.CreatedBy
+            CreatedBy = GetUserId()
         };
         var result = await _service.AddAsync(domain);
         return CreatedAtAction(nameof(GetById), new { id = result.PackageId }, MapToDto(result));
@@ -51,7 +57,7 @@ public class PackagesController : ControllerBase
             ProductId = dto.ProductId,
             ParentPackageId = dto.ParentPackageId,
             PackageTypeId = dto.PackageTypeId,
-            CreatedBy = dto.CreatedBy
+            CreatedBy = GetUserId()
         };
         return await _service.EditAsync(id, domain) ? NoContent() : NotFound();
     }

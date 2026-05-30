@@ -1,18 +1,24 @@
 ﻿using Asp.Versioning;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ProductManagement.DTOs;
 using ProductManagement.Interfaces;
 using ProductManagement.Model;
+using System.Security.Claims;
 
 namespace ProductManagement.Controllers.V2;
 
 [ApiController]
 [ApiVersion("2.0")]
 [Route("api/v{version:apiVersion}/[controller]")]
+[Authorize]
 public class ItemsController : ControllerBase
 {
     private readonly IItemService _service;
     public ItemsController(IItemService service) => _service = service;
+
+    private int GetUserId() =>
+        int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
 
     [HttpGet]
     public async Task<IActionResult> GetAll()
@@ -31,7 +37,7 @@ public class ItemsController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Add([FromBody] ItemCreateDto dto)
     {
-        var domain = new Item { ItemName = dto.ItemName, CreatedBy = dto.CreatedBy };
+        var domain = new Item { ItemName = dto.ItemName, CreatedBy = GetUserId() };
         var result = await _service.AddAsync(domain);
         return CreatedAtAction(nameof(GetById), new { id = result.ItemId }, MapToDto(result));
     }
@@ -43,7 +49,7 @@ public class ItemsController : ControllerBase
         {
             PackageId = dto.PackageId,
             ItemId = dto.ItemId,
-            CreatedBy = dto.CreatedBy
+            CreatedBy = GetUserId()
         };
         return await _service.AssignToPackageAsync(domainMapping) ? Ok("Assigned successfully.") : BadRequest();
     }
@@ -51,7 +57,7 @@ public class ItemsController : ControllerBase
     [HttpPut("{id:int}")]
     public async Task<IActionResult> Edit(int id, [FromBody] ItemCreateDto dto)
     {
-        var domain = new Item { ItemId = id, ItemName = dto.ItemName, CreatedBy = dto.CreatedBy };
+        var domain = new Item { ItemId = id, ItemName = dto.ItemName, CreatedBy = GetUserId() };
         return await _service.EditAsync(id, domain) ? NoContent() : NotFound();
     }
 

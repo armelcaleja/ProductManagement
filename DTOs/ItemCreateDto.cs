@@ -3,6 +3,5 @@
     public class ItemCreateDto
     {
         public string ItemName { get; set; } = string.Empty;
-        public int CreatedBy { get; set; }
     }
 }
