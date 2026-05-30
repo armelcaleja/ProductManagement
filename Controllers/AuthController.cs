@@ -1,7 +1,8 @@
-﻿using Microsoft.AspNetCore.Identity.Data;
+﻿using Asp.Versioning;
+using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
 using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
 using ProductManagement.DTOs;
 using ProductManagement.Interfaces;
 using System.IdentityModel.Tokens.Jwt;
@@ -11,7 +12,9 @@ using System.Text;
 namespace ProductManagement.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [ApiVersion("1.0")]
+    [ApiVersion("2.0")]
+    [Route("api/v{version:apiVersion}/[controller]")]
     public class AuthController : ControllerBase
     {
         private readonly IAuthService _authService;

@@ -2,13 +2,12 @@
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
-namespace ProductManagement.Extensions
+namespace ProductManagement.Extensions.WebApiInfrastructure
 {
     public static class JwtConfigurationExtensions
     {
         public static IServiceCollection AddJwtAuthentication(this IServiceCollection services, IConfiguration configuration)
         {
-            // 1. Pull settings from appsettings.json
             var jwtSettings = configuration.GetSection("JwtSettings");
             var secretKey = jwtSettings["Secret"];
 
@@ -17,7 +16,6 @@ namespace ProductManagement.Extensions
                 throw new InvalidOperationException("JWT Secret Key is missing from configuration.");
             }
 
-            // 2. Configure Authentication
             services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -37,7 +35,6 @@ namespace ProductManagement.Extensions
                 };
             });
 
-            // 3. Return services to allow chaining in Program.cs
             return services;
         }
     }
