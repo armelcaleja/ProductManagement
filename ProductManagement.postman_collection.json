@@ -188,7 +188,7 @@
               "host": ["{{baseUrl}}"],
               "path": ["api", "v1", "Products", "1"]
             },
-            "description": "Delete a product by ID."
+            "description": "Delete a product by ID (soft delete)."
           },
           "response": []
         }
@@ -282,7 +282,7 @@
               "host": ["{{baseUrl}}"],
               "path": ["api", "v2", "Products", "1"]
             },
-            "description": "Delete a product by ID (v2)."
+            "description": "Delete a product by ID (soft delete, v2)."
           },
           "response": []
         }
@@ -367,6 +367,29 @@
           "response": []
         },
         {
+          "name": "Unassign Item from Package",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"packageId\": 1,\n  \"itemId\": 1\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v2/Items/unassign-from-package",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v2", "Items", "unassign-from-package"]
+            },
+            "description": "Unassign an item from a package (soft delete)."
+          },
+          "response": []
+        },
+        {
           "name": "Update Item",
           "request": {
             "method": "PUT",
@@ -399,7 +422,7 @@
               "host": ["{{baseUrl}}"],
               "path": ["api", "v2", "Items", "1"]
             },
-            "description": "Delete an item by ID."
+            "description": "Delete an item by ID (soft delete)."
           },
           "response": []
         }
@@ -493,7 +516,7 @@
               "host": ["{{baseUrl}}"],
               "path": ["api", "v2", "Packages", "1"]
             },
-            "description": "Delete a package by ID."
+            "description": "Delete a package by ID (soft delete)."
           },
           "response": []
         }
@@ -587,7 +610,7 @@
               "host": ["{{baseUrl}}"],
               "path": ["api", "v2", "PackageTypes", "1"]
             },
-            "description": "Delete a package type by ID."
+            "description": "Delete a package type by ID (soft delete)."
           },
           "response": []
         }
