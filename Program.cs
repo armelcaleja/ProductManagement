@@ -1,4 +1,5 @@
 using ProductManagement.Extensions;
+using ProductManagement.Extensions.WebApiInfrastructure;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -23,6 +24,7 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
+    app.UseSwaggerConfiguration();
     await app.SeedDatabaseAsync();
 }
 

@@ -35,6 +35,9 @@ namespace ProductManagement.Extensions
             // API Versioning
             services.AddApiVersioningConfiguration();
 
+            // Swagger
+            services.AddSwaggerConfiguration();
+
             return services;
         }
     }
