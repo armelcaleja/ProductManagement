@@ -220,6 +220,8 @@ ProductManagement/
 - Console output
 - Rolling file at `Logs/log-{date}.txt` (retained for 7 days)
 
+**Centralized Error Handling:** A global exception middleware catches all unhandled exceptions, logs the full error details via Serilog, and returns a consistent JSON error response. In Development mode, the response includes the exception message and stack trace. In Production, only a generic error message is returned to avoid leaking sensitive information.
+
 ## Postman Collection
 
 A Postman collection is included at `ProductManagement.postman_collection.json`. Import it into Postman to test all endpoints. The login request automatically saves the JWT token to a collection variable for use in authenticated requests.

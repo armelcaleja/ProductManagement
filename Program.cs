@@ -1,5 +1,6 @@
 using ProductManagement.Extensions;
 using ProductManagement.Extensions.WebApiInfrastructure;
+using ProductManagement.Middleware;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -19,6 +20,9 @@ builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 
 var app = builder.Build();
+
+// Global exception handling
+app.UseMiddleware<GlobalExceptionMiddleware>();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
