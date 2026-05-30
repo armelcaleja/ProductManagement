@@ -22,7 +22,7 @@ namespace ProductManagement.Data
         {
             base.OnModelCreating(modelBuilder);
 
-            // Fix the self-referencing cascade path error
+            // Self-referencing hierarchy: ParentPackageId is nullable for root packages
             modelBuilder.Entity<Package>()
                 .HasMany(p => p.PackageList)
                 .WithOne()
