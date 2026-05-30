@@ -213,7 +213,9 @@ ProductManagement/
 
 ## Logging
 
-Structured logging is configured via Serilog. Logs are written to:
+**Audit Logging:** All Add, Edit, and Delete operations are logged to the `AuditLogs` table in the database, capturing the action, entity type, entity ID, description, and the user who performed the action.
+
+**Application Logging:** General application logs are handled by Serilog and written to:
 
 - Console output
 - Rolling file at `Logs/log-{date}.txt` (retained for 7 days)
