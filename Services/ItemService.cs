@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ProductManagement.Data;
-using ProductManagement.DTOs;
 using ProductManagement.Interfaces;
 using ProductManagement.Model;
 
@@ -9,7 +8,13 @@ namespace ProductManagement.Services
     public class ItemService : IItemService
     {
         private readonly AppDbContext _context;
-        public ItemService(AppDbContext context) => _context = context;
+        private readonly IAuditLogService _auditLog;
+
+        public ItemService(AppDbContext context, IAuditLogService auditLog)
+        {
+            _context = context;
+            _auditLog = auditLog;
+        }
 
         public async Task<IEnumerable<Item>> GetAllAsync() => await _context.Items.ToListAsync();
 
@@ -19,13 +24,21 @@ namespace ProductManagement.Services
         {
             _context.Items.Add(item);
             await _context.SaveChangesAsync();
+            await _auditLog.LogAsync("Add", "Item", item.ItemId,
+                $"Added item '{item.ItemName}'", item.CreatedBy);
             return item;
         }
 
         public async Task<bool> AssignToPackageAsync(PackageItem mapping)
         {
             _context.PackageItems.Add(mapping);
-            return await _context.SaveChangesAsync() > 0;
+            var result = await _context.SaveChangesAsync() > 0;
+            if (result)
+            {
+                await _auditLog.LogAsync("Assign", "PackageItem", mapping.PackageItemId,
+                    $"Assigned ItemId {mapping.ItemId} to PackageId {mapping.PackageId}", mapping.CreatedBy);
+            }
+            return result;
         }
 
         public async Task<bool> EditAsync(int id, Item item)
@@ -37,6 +50,8 @@ namespace ProductManagement.Services
             existing.CreatedBy = item.CreatedBy;
 
             await _context.SaveChangesAsync();
+            await _auditLog.LogAsync("Edit", "Item", id,
+                $"Updated item to '{item.ItemName}'", item.CreatedBy);
             return true;
         }
 
@@ -47,6 +62,8 @@ namespace ProductManagement.Services
 
             _context.Items.Remove(existing);
             await _context.SaveChangesAsync();
+            await _auditLog.LogAsync("Delete", "Item", id,
+                $"Deleted item '{existing.ItemName}'", existing.CreatedBy);
             return true;
         }
     }

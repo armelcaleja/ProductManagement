@@ -22,6 +22,7 @@ namespace ProductManagement.Extensions
             services.AddScoped<IItemService, ItemService>();
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<ITokenService, TokenService>();
+            services.AddScoped<IAuditLogService, AuditLogService>();
 
             return services;
         }

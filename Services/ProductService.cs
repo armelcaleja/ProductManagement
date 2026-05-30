@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ProductManagement.Data;
-using ProductManagement.DTOs;
 using ProductManagement.Interfaces;
 using ProductManagement.Model;
 
@@ -9,7 +8,13 @@ namespace ProductManagement.Services
     public class ProductService : IProductService
     {
         private readonly AppDbContext _context;
-        public ProductService(AppDbContext context) => _context = context;
+        private readonly IAuditLogService _auditLog;
+
+        public ProductService(AppDbContext context, IAuditLogService auditLog)
+        {
+            _context = context;
+            _auditLog = auditLog;
+        }
 
         public async Task<IEnumerable<Product>> GetAllAsync() =>
             await _context.Products
@@ -31,6 +36,8 @@ namespace ProductManagement.Services
         {
             _context.Products.Add(product);
             await _context.SaveChangesAsync();
+            await _auditLog.LogAsync("Add", "Product", product.ProductId,
+                $"Added product '{product.ProductName}' with price {product.ProductPrice}", product.CreatedBy);
             return product;
         }
 
@@ -44,6 +51,8 @@ namespace ProductManagement.Services
             existing.CreatedBy = product.CreatedBy;
 
             await _context.SaveChangesAsync();
+            await _auditLog.LogAsync("Edit", "Product", id,
+                $"Updated product to '{product.ProductName}' with price {product.ProductPrice}", product.CreatedBy);
             return true;
         }
 
@@ -54,6 +63,8 @@ namespace ProductManagement.Services
 
             _context.Products.Remove(existing);
             await _context.SaveChangesAsync();
+            await _auditLog.LogAsync("Delete", "Product", id,
+                $"Deleted product '{existing.ProductName}'", existing.CreatedBy);
             return true;
         }
     }

@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ProductManagement.Data;
-using ProductManagement.DTOs;
 using ProductManagement.Interfaces;
 using ProductManagement.Model;
 
@@ -9,7 +8,13 @@ namespace ProductManagement.Services
     public class PackageService : IPackageService
     {
         private readonly AppDbContext _context;
-        public PackageService(AppDbContext context) => _context = context;
+        private readonly IAuditLogService _auditLog;
+
+        public PackageService(AppDbContext context, IAuditLogService auditLog)
+        {
+            _context = context;
+            _auditLog = auditLog;
+        }
 
         public async Task<IEnumerable<Package>> GetAllAsync() =>
             await _context.Packages.Include(p => p.Items).Include(p => p.PackageList).ToListAsync();
@@ -21,6 +26,8 @@ namespace ProductManagement.Services
         {
             _context.Packages.Add(package);
             await _context.SaveChangesAsync();
+            await _auditLog.LogAsync("Add", "Package", package.PackageId,
+                $"Added package for ProductId {package.ProductId}, PackageTypeId {package.PackageTypeId}", package.CreatedBy);
             return package;
         }
 
@@ -35,6 +42,8 @@ namespace ProductManagement.Services
             existing.CreatedBy = package.CreatedBy;
 
             await _context.SaveChangesAsync();
+            await _auditLog.LogAsync("Edit", "Package", id,
+                $"Updated package: ProductId {package.ProductId}, PackageTypeId {package.PackageTypeId}", package.CreatedBy);
             return true;
         }
 
@@ -45,6 +54,8 @@ namespace ProductManagement.Services
 
             _context.Packages.Remove(existing);
             await _context.SaveChangesAsync();
+            await _auditLog.LogAsync("Delete", "Package", id,
+                $"Deleted package (ProductId {existing.ProductId})", existing.CreatedBy);
             return true;
         }
     }

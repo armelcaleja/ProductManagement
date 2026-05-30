@@ -8,4 +8,6 @@
 # Intermediate compilation object folders, transient fragments, and nuget restore targets
 [Oo]bj/
 
+[Ll]ogs/
+
 .vs/
