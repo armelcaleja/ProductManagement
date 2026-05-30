@@ -10,5 +10,7 @@ namespace ProductManagement.Model
         public string PackageTypeName { get; set; } = string.Empty;
 
         public int CreatedBy { get; set; }
+
+        public DateTime CreatedDate { get; set; } = DateTime.UtcNow;
     }
 }

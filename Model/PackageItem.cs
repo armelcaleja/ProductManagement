@@ -9,5 +9,7 @@
         public int ItemId { get; set; }
 
         public int CreatedBy { get; set; }
+
+        public DateTime CreatedDate { get; set; } = DateTime.UtcNow;
     }
 }

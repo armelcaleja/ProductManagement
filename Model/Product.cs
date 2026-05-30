@@ -13,6 +13,8 @@ namespace ProductManagement.Model
 
         public int CreatedBy { get; set; }
 
+        public DateTime CreatedDate { get; set; } = DateTime.UtcNow;
+
         public List<Package> Packages { get; set; } = new();
     }
 }
