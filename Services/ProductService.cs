@@ -12,10 +12,20 @@ namespace ProductManagement.Services
         public ProductService(AppDbContext context) => _context = context;
 
         public async Task<IEnumerable<Product>> GetAllAsync() =>
-            await _context.Products.Include(p => p.Packages).ToListAsync();
+            await _context.Products
+                .Include(p => p.Packages).ThenInclude(pkg => pkg.PackageType)
+                .Include(p => p.Packages).ThenInclude(pkg => pkg.Items)
+                .Include(p => p.Packages).ThenInclude(pkg => pkg.PackageList).ThenInclude(sub => sub.PackageType)
+                .Include(p => p.Packages).ThenInclude(pkg => pkg.PackageList).ThenInclude(sub => sub.Items)
+                .ToListAsync();
 
         public async Task<Product?> GetByIdAsync(int id) =>
-            await _context.Products.Include(p => p.Packages).FirstOrDefaultAsync(p => p.ProductId == id);
+            await _context.Products
+                .Include(p => p.Packages).ThenInclude(pkg => pkg.PackageType)
+                .Include(p => p.Packages).ThenInclude(pkg => pkg.Items)
+                .Include(p => p.Packages).ThenInclude(pkg => pkg.PackageList).ThenInclude(sub => sub.PackageType)
+                .Include(p => p.Packages).ThenInclude(pkg => pkg.PackageList).ThenInclude(sub => sub.Items)
+                .FirstOrDefaultAsync(p => p.ProductId == id);
 
         public async Task<Product> AddAsync(Product product)
         {

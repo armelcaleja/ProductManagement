@@ -14,6 +14,8 @@ namespace ProductManagement.Model
 
         public int CreatedBy { get; set; }
 
+        public PackageType PackageType { get; set; } = null!;
+
         public List<Item> Items { get; set; } = new();
 
         [ForeignKey("ParentPackageId")]
