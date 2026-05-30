@@ -1,0 +1,597 @@
+{
+  "info": {
+    "name": "ProductManagement API",
+    "description": "API collection for the ProductManagement ASP.NET Core Web API.\n\nAuthentication: JWT Bearer tokens.\nVersioning: URL segment-based (v1, v2).\n\nWorkflow:\n1. Register a user\n2. Login to get a JWT token (auto-saved to collection variable)\n3. Use authenticated endpoints",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "https://localhost:7218",
+      "type": "string"
+    },
+    {
+      "key": "token",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "item": [
+    {
+      "name": "Auth",
+      "description": "Authentication endpoints (no token required)",
+      "item": [
+        {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"testuser01\",\n  \"password\": \"Password123!\",\n  \"confirmPassword\": \"Password123!\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/Auth/register",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "Auth", "register"]
+            },
+            "auth": {
+              "type": "noauth"
+            },
+            "description": "Register a new user account."
+          },
+          "response": []
+        },
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.token) {",
+                  "    pm.collectionVariables.set(\"token\", jsonData.token);",
+                  "    console.log(\"Token saved to collection variable.\");",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"testuser01\",\n  \"password\": \"Password123!\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/Auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "Auth", "login"]
+            },
+            "auth": {
+              "type": "noauth"
+            },
+            "description": "Login and receive a JWT token. The token is automatically saved to the collection variable."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Products (v1)",
+      "description": "Product CRUD operations - API v1 (flat response without packages)",
+      "item": [
+        {
+          "name": "Get All Products",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/Products",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "Products"]
+            },
+            "description": "Retrieve all products (v1 flat response)."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Product by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/Products/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "Products", "1"]
+            },
+            "description": "Retrieve a single product by ID."
+          },
+          "response": []
+        },
+        {
+          "name": "Create Product",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"productName\": \"New Product\",\n  \"productPrice\": 100\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/Products",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "Products"]
+            },
+            "description": "Create a new product."
+          },
+          "response": []
+        },
+        {
+          "name": "Update Product",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"productName\": \"Updated Product\",\n  \"productPrice\": 150\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/Products/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "Products", "1"]
+            },
+            "description": "Update an existing product by ID."
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Product",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/Products/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "Products", "1"]
+            },
+            "description": "Delete a product by ID."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Products (v2)",
+      "description": "Product CRUD operations - API v2 (includes nested packages)",
+      "item": [
+        {
+          "name": "Get All Products",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v2/Products",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v2", "Products"]
+            },
+            "description": "Retrieve all products with nested packages (v2 response)."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Product by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v2/Products/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v2", "Products", "1"]
+            },
+            "description": "Retrieve a single product by ID with nested packages."
+          },
+          "response": []
+        },
+        {
+          "name": "Create Product",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"productName\": \"New Product v2\",\n  \"productPrice\": 200\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v2/Products",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v2", "Products"]
+            },
+            "description": "Create a new product (v2)."
+          },
+          "response": []
+        },
+        {
+          "name": "Update Product",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"productName\": \"Updated Product v2\",\n  \"productPrice\": 250\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v2/Products/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v2", "Products", "1"]
+            },
+            "description": "Update an existing product by ID (v2)."
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Product",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v2/Products/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v2", "Products", "1"]
+            },
+            "description": "Delete a product by ID (v2)."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Items (v2)",
+      "description": "Item CRUD operations and package assignment",
+      "item": [
+        {
+          "name": "Get All Items",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v2/Items",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v2", "Items"]
+            },
+            "description": "Retrieve all items."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Item by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v2/Items/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v2", "Items", "1"]
+            },
+            "description": "Retrieve a single item by ID."
+          },
+          "response": []
+        },
+        {
+          "name": "Create Item",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"itemName\": \"New Item\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v2/Items",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v2", "Items"]
+            },
+            "description": "Create a new item."
+          },
+          "response": []
+        },
+        {
+          "name": "Assign Item to Package",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"packageId\": 1,\n  \"itemId\": 1\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v2/Items/assign-to-package",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v2", "Items", "assign-to-package"]
+            },
+            "description": "Assign an existing item to a package."
+          },
+          "response": []
+        },
+        {
+          "name": "Update Item",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"itemName\": \"Updated Item\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v2/Items/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v2", "Items", "1"]
+            },
+            "description": "Update an existing item by ID."
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Item",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v2/Items/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v2", "Items", "1"]
+            },
+            "description": "Delete an item by ID."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Packages (v2)",
+      "description": "Package CRUD operations",
+      "item": [
+        {
+          "name": "Get All Packages",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v2/Packages",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v2", "Packages"]
+            },
+            "description": "Retrieve all packages."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Package by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v2/Packages/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v2", "Packages", "1"]
+            },
+            "description": "Retrieve a single package by ID."
+          },
+          "response": []
+        },
+        {
+          "name": "Create Package",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"productId\": 1,\n  \"parentPackageId\": null,\n  \"packageTypeId\": 1\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v2/Packages",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v2", "Packages"]
+            },
+            "description": "Create a new package. parentPackageId is optional (null for top-level packages)."
+          },
+          "response": []
+        },
+        {
+          "name": "Update Package",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"productId\": 1,\n  \"parentPackageId\": null,\n  \"packageTypeId\": 2\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v2/Packages/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v2", "Packages", "1"]
+            },
+            "description": "Update an existing package by ID."
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Package",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v2/Packages/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v2", "Packages", "1"]
+            },
+            "description": "Delete a package by ID."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Package Types (v2)",
+      "description": "Package Type CRUD operations",
+      "item": [
+        {
+          "name": "Get All Package Types",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v2/PackageTypes",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v2", "PackageTypes"]
+            },
+            "description": "Retrieve all package types."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Package Type by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v2/PackageTypes/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v2", "PackageTypes", "1"]
+            },
+            "description": "Retrieve a single package type by ID."
+          },
+          "response": []
+        },
+        {
+          "name": "Create Package Type",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"packageTypeName\": \"Box\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v2/PackageTypes",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v2", "PackageTypes"]
+            },
+            "description": "Create a new package type."
+          },
+          "response": []
+        },
+        {
+          "name": "Update Package Type",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"packageTypeName\": \"Updated Box\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v2/PackageTypes/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v2", "PackageTypes", "1"]
+            },
+            "description": "Update an existing package type by ID."
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Package Type",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v2/PackageTypes/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v2", "PackageTypes", "1"]
+            },
+            "description": "Delete a package type by ID."
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}
