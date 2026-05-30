@@ -79,7 +79,7 @@ public class ItemsIntegrationTests : IClassFixture<CustomWebApplicationFactory>
         // Update
         var updateDto = new ItemCreateDto { ItemName = "Updated Lifecycle Item" };
         var updateResponse = await client.PutAsJsonAsync($"/api/v2/Items/{created!.ItemId}", updateDto);
-        updateResponse.StatusCode.Should().Be(HttpStatusCode.NoContent);
+        updateResponse.StatusCode.Should().Be(HttpStatusCode.OK);
 
         // Verify update
         var getResponse = await client.GetAsync($"/api/v2/Items/{created.ItemId}");

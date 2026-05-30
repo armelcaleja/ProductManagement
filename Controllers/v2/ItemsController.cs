@@ -62,7 +62,9 @@ public class ItemsController : ControllerBase
     public async Task<IActionResult> Edit(int id, [FromBody] ItemCreateDto dto)
     {
         var domain = new Item { ItemId = id, ItemName = dto.ItemName, CreatedBy = GetUserId() };
-        return await _service.EditAsync(id, domain) ? NoContent() : NotFound();
+        var result = await _service.EditAsync(id, domain);
+        if (!result) return NotFound(new { message = $"Item with ID {id} not found." });
+        return Ok(new { message = "Item successfully updated." });
     }
 
     [HttpDelete("{id:int}")]

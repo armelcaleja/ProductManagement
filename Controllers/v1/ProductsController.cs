@@ -63,7 +63,9 @@ namespace ProductManagement.Controllers.V1
                 ProductPrice = dto.ProductPrice,
                 CreatedBy = GetUserId()
             };
-            return await _productService.EditAsync(id, domainModel) ? NoContent() : NotFound();
+            var result = await _productService.EditAsync(id, domainModel);
+            if (!result) return NotFound(new { message = $"Product with ID {id} not found." });
+            return Ok(new { message = "Product successfully updated." });
         }
 
         [HttpDelete("{id:int}")]

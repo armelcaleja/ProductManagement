@@ -132,7 +132,7 @@ public class PackageTypesControllerTests
     }
 
     [Fact]
-    public async Task Edit_ExistingPackageType_ReturnsNoContent()
+    public async Task Edit_ExistingPackageType_ReturnsOkWithMessage()
     {
         // Arrange
         var dto = new PackageTypeCreateDto { PackageTypeName = "Updated Box" };
@@ -142,11 +142,12 @@ public class PackageTypesControllerTests
         var result = await _controller.Edit(1, dto);
 
         // Assert
-        result.Should().BeOfType<NoContentResult>();
+        var okResult = result.Should().BeOfType<OkObjectResult>().Subject;
+        okResult.Value.Should().BeEquivalentTo(new { message = "PackageType successfully updated." });
     }
 
     [Fact]
-    public async Task Edit_NonExistingPackageType_ReturnsNotFound()
+    public async Task Edit_NonExistingPackageType_ReturnsNotFoundWithMessage()
     {
         // Arrange
         var dto = new PackageTypeCreateDto { PackageTypeName = "Updated" };
@@ -156,7 +157,8 @@ public class PackageTypesControllerTests
         var result = await _controller.Edit(99, dto);
 
         // Assert
-        result.Should().BeOfType<NotFoundResult>();
+        var notFoundResult = result.Should().BeOfType<NotFoundObjectResult>().Subject;
+        notFoundResult.Value.Should().BeEquivalentTo(new { message = "PackageType with ID 99 not found." });
     }
 
     [Fact]

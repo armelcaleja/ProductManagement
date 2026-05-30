@@ -46,7 +46,9 @@ public class PackageTypesController : ControllerBase
     public async Task<IActionResult> Edit(int id, [FromBody] PackageTypeCreateDto dto)
     {
         var domain = new PackageType { PackageTypeId = id, PackageTypeName = dto.PackageTypeName, CreatedBy = GetUserId() };
-        return await _service.EditAsync(id, domain) ? NoContent() : NotFound();
+        var result = await _service.EditAsync(id, domain);
+        if (!result) return NotFound(new { message = $"PackageType with ID {id} not found." });
+        return Ok(new { message = "PackageType successfully updated." });
     }
 
     [HttpDelete("{id:int}")]

@@ -59,7 +59,9 @@ public class PackagesController : ControllerBase
             PackageTypeId = dto.PackageTypeId,
             CreatedBy = GetUserId()
         };
-        return await _service.EditAsync(id, domain) ? NoContent() : NotFound();
+        var result = await _service.EditAsync(id, domain);
+        if (!result) return NotFound(new { message = $"Package with ID {id} not found." });
+        return Ok(new { message = "Package successfully updated." });
     }
 
     [HttpDelete("{id:int}")]

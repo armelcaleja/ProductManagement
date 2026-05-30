@@ -79,7 +79,7 @@ public class PackageTypesIntegrationTests : IClassFixture<CustomWebApplicationFa
         // Update
         var updateDto = new PackageTypeCreateDto { PackageTypeName = "Updated Lifecycle Box" };
         var updateResponse = await client.PutAsJsonAsync($"/api/v2/PackageTypes/{created!.PackageTypeId}", updateDto);
-        updateResponse.StatusCode.Should().Be(HttpStatusCode.NoContent);
+        updateResponse.StatusCode.Should().Be(HttpStatusCode.OK);
 
         // Verify update
         var getResponse = await client.GetAsync($"/api/v2/PackageTypes/{created.PackageTypeId}");

@@ -79,7 +79,7 @@ public class ProductsIntegrationTests : IClassFixture<CustomWebApplicationFactor
         // Update
         var updateDto = new ProductCreateDto { ProductName = "Updated Lifecycle", ProductPrice = 200 };
         var updateResponse = await client.PutAsJsonAsync($"/api/v1/Products/{created!.ProductId}", updateDto);
-        updateResponse.StatusCode.Should().Be(HttpStatusCode.NoContent);
+        updateResponse.StatusCode.Should().Be(HttpStatusCode.OK);
 
         // Verify update
         var getResponse = await client.GetAsync($"/api/v1/Products/{created.ProductId}");

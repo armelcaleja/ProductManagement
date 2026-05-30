@@ -122,7 +122,7 @@ public class ItemsControllerTests
     }
 
     [Fact]
-    public async Task Edit_ExistingItem_ReturnsNoContent()
+    public async Task Edit_ExistingItem_ReturnsOkWithMessage()
     {
         // Arrange
         var dto = new ItemCreateDto { ItemName = "Updated" };
@@ -132,11 +132,12 @@ public class ItemsControllerTests
         var result = await _controller.Edit(1, dto);
 
         // Assert
-        result.Should().BeOfType<NoContentResult>();
+        var okResult = result.Should().BeOfType<OkObjectResult>().Subject;
+        okResult.Value.Should().BeEquivalentTo(new { message = "Item successfully updated." });
     }
 
     [Fact]
-    public async Task Edit_NonExistingItem_ReturnsNotFound()
+    public async Task Edit_NonExistingItem_ReturnsNotFoundWithMessage()
     {
         // Arrange
         var dto = new ItemCreateDto { ItemName = "Updated" };
@@ -146,7 +147,8 @@ public class ItemsControllerTests
         var result = await _controller.Edit(99, dto);
 
         // Assert
-        result.Should().BeOfType<NotFoundResult>();
+        var notFoundResult = result.Should().BeOfType<NotFoundObjectResult>().Subject;
+        notFoundResult.Value.Should().BeEquivalentTo(new { message = "Item with ID 99 not found." });
     }
 
     [Fact]
