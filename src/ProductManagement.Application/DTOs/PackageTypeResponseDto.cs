@@ -1,0 +1,8 @@
+namespace ProductManagement.Application.DTOs
+{
+    public class PackageTypeResponseDto
+    {
+        public int PackageTypeId { get; set; }
+        public string PackageTypeName { get; set; } = string.Empty;
+    }
+}

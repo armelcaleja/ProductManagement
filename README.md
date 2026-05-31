@@ -164,40 +164,58 @@ This applies to: Products, Items, Packages, Package Types, and Package-Item assi
 
 ## Project Structure
 
-```
+The solution follows **Clean Architecture** with four separate projects:
+
+```text
 ProductManagement/
-├── Controllers/
-│   ├── AuthController.cs
-│   ├── v1/
-│   │   └── ProductsController.cs
-│   └── v2/
-│       ├── ProductsController.cs
-│       ├── PackagesController.cs
-│       ├── ItemsController.cs
-│       └── PackageTypesController.cs
-├── Data/
-│   ├── AppDbContext.cs
-│   └── AppDbContextFactory.cs
-├── DTOs/
-├── Extensions/
-│   ├── DatabaseSeeder.cs
-│   ├── DependencyInjection.cs
-│   └── WebApiInfrastructure/
-├── Interfaces/
-├── Migrations/
-├── Model/
-│   ├── Product.cs
-│   ├── Package.cs
-│   ├── Item.cs
-│   ├── PackageItem.cs
-│   ├── PackageType.cs
-│   ├── AuditLog.cs
-│   └── User.cs
-├── Services/
-├── Logs/
-├── Program.cs
-├── appsettings.json
-└── ProductManagement.postman_collection.json
+├── database/
+│   ├── 01_CreateTables.sql
+│   ├── 02_SampleData.sql
+│   └── 03_Queries.sql
+├── src/
+│   ├── ProductManagement.API/
+│   │   ├── Controllers/
+│   │   │   ├── AuthController.cs
+│   │   │   ├── v1/
+│   │   │   │   └── ProductsController.cs
+│   │   │   └── v2/
+│   │   │       ├── ProductsController.cs
+│   │   │       ├── PackagesController.cs
+│   │   │       ├── ItemsController.cs
+│   │   │       └── PackageTypesController.cs
+│   │   ├── Extensions/
+│   │   │   ├── DatabaseSeeder.cs
+│   │   │   └── WebApiInfrastructure/
+│   │   │       ├── JwtConfigurationExtensions.cs
+│   │   │       ├── SwaggerConfiguration.cs
+│   │   │       └── VersioningConfiguration.cs
+│   │   ├── Middleware/
+│   │   │   └── GlobalExceptionMiddleware.cs
+│   │   ├── Logs/
+│   │   ├── Program.cs
+│   │   └── appsettings.json
+│   ├── ProductManagement.Application/
+│   │   ├── DTOs/
+│   │   └── Interfaces/
+│   ├── ProductManagement.Domain/
+│   │   └── Entities/
+│   │       ├── Product.cs
+│   │       ├── Package.cs
+│   │       ├── Item.cs
+│   │       ├── PackageItem.cs
+│   │       ├── PackageType.cs
+│   │       ├── AuditLog.cs
+│   │       └── User.cs
+│   └── ProductManagement.Infrastructure/
+│       ├── Data/
+│       │   ├── AppDbContext.cs
+│       │   └── AppDbContextFactory.cs
+│       ├── Migrations/
+│       ├── Services/
+│       └── DependencyInjection.cs
+├── ProductManagement.slnx
+├── ProductManagement.postman_collection.json
+└── README.md
 ```
 
 ## Key Dependencies
